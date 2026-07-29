@@ -1,0 +1,2 @@
+using UnityEngine;
+namespace TowerDefenseIncremental { public sealed class MetaProgressionManager : MonoBehaviour { public int Cores { get; private set; } private void Awake() { Cores = SaveSystem.LoadMeta().cores; } public int AwardRun(bool won, int completedWave) { var award = Mathf.Max(1, completedWave) + (won ? 5 : 0); Cores += award; SaveSystem.SaveMeta(new MetaSaveData { cores = Cores }); return award; } } }
