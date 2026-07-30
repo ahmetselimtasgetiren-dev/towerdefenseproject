@@ -11,6 +11,12 @@ namespace TowerDefenseIncremental
 
         private static readonly Dictionary<Shape, Sprite> sprites = new();
 
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
+        private static void ResetRuntimeCache()
+        {
+            sprites.Clear();
+        }
+
         public static GameObject Box(string name, Vector2 position, Vector2 scale, Color color, int order, bool withShadow = false)
             => CreateShape(name, Shape.Square, position, scale, color, order, withShadow);
 
@@ -58,7 +64,13 @@ namespace TowerDefenseIncremental
 
         private static Sprite GetSprite(Shape shape)
         {
-            if (sprites.TryGetValue(shape, out var sprite)) return sprite;
+            if (sprites.TryGetValue(shape, out var sprite))
+            {
+                if (sprite != null)
+                    return sprite;
+
+                sprites.Remove(shape);
+            }
 
             const int size = 16;
             var texture = new Texture2D(size, size, TextureFormat.RGBA32, false)
