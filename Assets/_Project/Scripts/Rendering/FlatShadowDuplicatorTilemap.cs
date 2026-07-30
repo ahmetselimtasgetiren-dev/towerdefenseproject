@@ -23,7 +23,14 @@ namespace TowerDefenseIncremental.Rendering
 
         private void Awake() => CacheFront();
         private void OnEnable() { RefreshShadowTiles(); SynchronizeRenderer(); }
-        private void OnValidate() { RefreshShadowTiles(); SynchronizeRenderer(); }
+        private void OnValidate()
+        {
+            if (Application.isPlaying)
+                return;
+
+            RefreshShadowTiles();
+            SynchronizeRenderer();
+        }
         private void LateUpdate()
         {
             if (refreshTilesEveryFrame && Application.isPlaying) RefreshShadowTiles();

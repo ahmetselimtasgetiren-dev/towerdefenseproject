@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace TowerDefenseIncremental
@@ -24,42 +23,82 @@ namespace TowerDefenseIncremental
         private TowerPlacementManager placement;
         private MetaProgressionManager meta;
         private RunHud hud;
+        private GameInputRouter input;
 
-        public void Initialize(PathManager pathManager, EconomyManager economyManager, WaveSpawner waveSpawner, ProjectilePool projectilePool, TowerPlacementManager placementManager, MetaProgressionManager metaManager, RunHud runHud)
+        public void Initialize(
+            PathManager pathManager,
+            EconomyManager economyManager,
+            WaveSpawner waveSpawner,
+            ProjectilePool projectilePool,
+            EnemyPool enemyPool,
+            TowerPlacementManager placementManager,
+            MetaProgressionManager metaManager,
+            RunHud runHud,
+            GameInputRouter inputRouter,
+            IEnumerable<TowerData> towerDefinitions,
+            IEnumerable<WaveData> waveDefinitions)
         {
-            path = pathManager; economy = economyManager; spawner = waveSpawner; pool = projectilePool; placement = placementManager; meta = metaManager; hud = runHud;
+            path = pathManager;
+            economy = economyManager;
+            spawner = waveSpawner;
+            pool = projectilePool;
+            placement = placementManager;
+            meta = metaManager;
+            hud = runHud;
+            input = inputRouter;
+
+            input.StartWavePressed += StartNextWave;
+            input.RestartPressed += Restart;
             SetupCamera();
             path.BuildBoard();
             economy.ResetGold(90);
             Lives = StartingLives;
             pool.Initialize();
-            placement.Initialize(this, path, economy);
-            spawner.Initialize(this, path);
+            placement.Initialize(this, path, economy, input, meta, towerDefinitions);
+            spawner.Initialize(this, path, enemyPool, waveDefinitions);
             hud.Initialize(this, economy, meta);
-            Message = "Build your defense, then launch Wave 1.";
+            SetMessage("Build your defense, then launch Wave 1.");
         }
 
-        private void Update()
+        private void OnDestroy()
+        {
+            if (input == null)
+                return;
+
+            input.StartWavePressed -= StartNextWave;
+            input.RestartPressed -= Restart;
+        }
+
+        private void Restart()
         {
             if (State is RunState.Won or RunState.Lost)
-            {
-                if (Keyboard.current != null && Keyboard.current.rKey.wasPressedThisFrame) SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-                return;
-            }
-            if (State == RunState.Preparation && Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame) StartNextWave();
+                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         public void StartNextWave()
         {
             if (State != RunState.Preparation) return;
-            Wave++;
+
+            var nextWave = spawner.GetNextWave(Wave);
+            if (nextWave == null)
+            {
+                FinishRun(RunState.Won);
+                return;
+            }
+
+            Wave = nextWave.WaveNumber;
             State = RunState.WaveActive;
-            spawner.BeginWave(Wave);
-            Message = $"Wave {Wave} is on the way.";
+            GameEvents.RunStateChanged?.Invoke(State);
+            spawner.BeginWave(nextWave);
+            SetMessage($"Wave {Wave} is on the way.");
             GameEvents.WaveStarted?.Invoke(Wave);
         }
 
-        public void SetMessage(string value) => Message = value;
+        public void SetMessage(string value)
+        {
+            Message = value;
+            GameEvents.MessageChanged?.Invoke(Message);
+        }
 
         public void RegisterEnemy(Enemy enemy) => enemies.Add(enemy);
         public void UnregisterEnemy(Enemy enemy) => enemies.Remove(enemy);
@@ -92,15 +131,24 @@ namespace TowerDefenseIncremental
         public void TryCompleteWave()
         {
             if (State != RunState.WaveActive || spawner.IsSpawning || enemies.Count > 0) return;
-            if (Wave >= 5) FinishRun(RunState.Won);
-            else { State = RunState.Preparation; Message = "Wave cleared. Spend your gold, then launch the next wave."; GameEvents.WaveCompleted?.Invoke(Wave); }
+            if (!spawner.HasWaveAfter(Wave)) FinishRun(RunState.Won);
+            else
+            {
+                State = RunState.Preparation;
+                GameEvents.RunStateChanged?.Invoke(State);
+                SetMessage("Wave cleared. Spend your gold, then launch the next wave.");
+                GameEvents.WaveCompleted?.Invoke(Wave);
+            }
         }
 
         private void FinishRun(RunState result)
         {
             State = result;
+            GameEvents.RunStateChanged?.Invoke(State);
             var gained = meta.AwardRun(result == RunState.Won, Wave);
-            Message = result == RunState.Won ? $"Victory! Earned {gained} cores. Press R to restart." : $"Base overrun. Earned {gained} cores. Press R to retry.";
+            SetMessage(result == RunState.Won
+                ? $"Victory! Earned {gained} cores. Press R to restart."
+                : $"Base overrun. Earned {gained} cores. Press R to retry.");
         }
 
         private static void SetupCamera()

@@ -18,7 +18,11 @@ namespace TowerDefenseIncremental.Rendering
 
         private void Awake() => CacheFront();
         private void OnEnable() => Synchronize();
-        private void OnValidate() => Synchronize();
+        private void OnValidate()
+        {
+            if (!Application.isPlaying)
+                Synchronize();
+        }
         private void LateUpdate() => Synchronize();
 
         private void OnDestroy()

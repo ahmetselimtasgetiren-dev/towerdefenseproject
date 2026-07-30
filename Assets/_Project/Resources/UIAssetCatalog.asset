@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de1692c73d772e148bd97c43b0380501, type: 3}
+  m_Name: UIAssetCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::TowerDefenseIncremental.UIAssetCatalog
+  gemsIcon: {fileID: 21300000, guid: 3e53719cd4127db44a06f107bd314364, type: 3}
+  scrapIcon: {fileID: 21300000, guid: b17be0bdc9d03b3428dfeb36995b79c5, type: 3}
+  crystalsIcon: {fileID: 21300000, guid: a82ab61713c965f49a2fef40331c38c3, type: 3}
+  nodeFrameBase: {fileID: 21300000, guid: 9c9e7eb9f263f3740bd605b8db6e053d, type: 3}
+  nodeGlowRing: {fileID: 21300000, guid: 076c3317b65ae284f808d65147cc8cd4, type: 3}
+  nodeLocked: {fileID: 21300000, guid: 03856d7c85b99c645becec471e250e76, type: 3}
+  startButton: {fileID: 21300000, guid: a96ec385c6fa1e14994bbd9547e063d7, type: 3}
+  upgradeButton: {fileID: 21300000, guid: c12d5ac7f749bb644b07ff36093e7c38, type: 3}
+  refundButton: {fileID: 21300000, guid: 45e564ff2a07d1743ad2dc9cbaacd87f, type: 3}
+  panelFrame: {fileID: 21300000, guid: 4b8ee14d04fd8064ea7aa16d92d8061a, type: 3}

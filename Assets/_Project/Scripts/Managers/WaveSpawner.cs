@@ -1,33 +1,98 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace TowerDefenseIncremental
 {
     public sealed class WaveSpawner : MonoBehaviour
     {
+        private readonly Queue<SpawnTicket> pending = new();
+        private readonly List<WaveData> waves = new();
+
         private GameManager game;
         private PathManager path;
-        private int remaining;
+        private EnemyPool enemyPool;
         private float timer;
 
-        public bool IsSpawning => remaining > 0;
+        public bool IsSpawning => pending.Count > 0;
 
-        public void Initialize(GameManager owner, PathManager route) { game = owner; path = route; }
-        public void BeginWave(int wave) { remaining = 5 + wave * 3; timer = .3f; }
+        public void Initialize(
+            GameManager owner,
+            PathManager route,
+            EnemyPool pool,
+            IEnumerable<WaveData> waveDefinitions)
+        {
+            game = owner;
+            path = route;
+            enemyPool = pool;
+            waves.AddRange(waveDefinitions);
+            waves.Sort((left, right) => left.WaveNumber.CompareTo(right.WaveNumber));
+        }
+
+        public WaveData GetNextWave(int currentWave)
+        {
+            foreach (var wave in waves)
+            {
+                if (wave != null && wave.WaveNumber > currentWave)
+                    return wave;
+            }
+
+            return null;
+        }
+
+        public bool HasWaveAfter(int currentWave) => GetNextWave(currentWave) != null;
+
+        public void BeginWave(WaveData wave)
+        {
+            pending.Clear();
+            timer = wave.DelayBeforeWave;
+
+            foreach (var group in wave.Groups)
+            {
+                if (group?.Enemy == null)
+                    continue;
+
+                for (var i = 0; i < group.Count; i++)
+                    pending.Enqueue(new SpawnTicket(group));
+            }
+        }
 
         private void Update()
         {
-            if (!IsSpawning) { game?.TryCompleteWave(); return; }
-            timer -= Time.deltaTime;
-            if (timer > 0f) return;
+            if (!IsSpawning)
+            {
+                game?.TryCompleteWave();
+                return;
+            }
 
-            var tough = game.Wave >= 3 && remaining % 4 == 0;
-            var color = tough ? new Color(.77f, .39f, .81f) : new Color(.93f, .38f, .48f);
-            var go = SpriteFactory.CreateEnemy(tough ? "Aether Brute" : "Aether Wisp", path.Waypoints[0], color, 3, tough);
-            var enemy = go.AddComponent<Enemy>();
-            enemy.Initialize(game, path.Waypoints, 17 + game.Wave * 7 + (tough ? 18 : 0), 1.25f + game.Wave * .06f - (tough ? .12f : 0f), tough ? 3 : 2);
-            game.RegisterEnemy(enemy);
-            remaining--;
-            timer = Mathf.Max(.32f, .82f - game.Wave * .045f);
+            timer -= Time.deltaTime;
+            if (timer > 0f)
+                return;
+
+            var ticket = pending.Dequeue();
+            enemyPool.Get(
+                ticket.Enemy,
+                game,
+                path.Waypoints,
+                ticket.HealthMultiplier,
+                ticket.SpeedMultiplier);
+            timer = ticket.SpawnInterval;
+        }
+
+        private readonly struct SpawnTicket
+        {
+            public readonly EnemyData Enemy;
+            public readonly float SpawnInterval;
+            public readonly float HealthMultiplier;
+            public readonly float SpeedMultiplier;
+
+            public SpawnTicket(EnemySpawnGroup group)
+            {
+                Enemy = group.Enemy;
+                SpawnInterval = group.SpawnInterval;
+                HealthMultiplier = group.HealthMultiplier;
+                SpeedMultiplier = group.SpeedMultiplier;
+            }
         }
     }
 }
