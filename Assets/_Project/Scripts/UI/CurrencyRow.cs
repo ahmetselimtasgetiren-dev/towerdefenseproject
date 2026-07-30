@@ -1,5 +1,4 @@
 using TMPro;
-using TowerDefenseIncremental.Rendering;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,8 +21,6 @@ namespace TowerDefenseIncremental
 
             var background = gameObject.AddComponent<Image>();
             background.color = new Color(0.11f, 0.106f, 0.106f);
-            gameObject.AddComponent<FlatShadowDuplicatorUI>();
-
             RuntimeUIFactory.CreateImage(
                 "Accent",
                 transform,

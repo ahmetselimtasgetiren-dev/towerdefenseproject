@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using TowerDefenseIncremental.Rendering;
 using UnityEngine;
 
 namespace TowerDefenseIncremental
@@ -17,24 +16,24 @@ namespace TowerDefenseIncremental
             sprites.Clear();
         }
 
-        public static GameObject Box(string name, Vector2 position, Vector2 scale, Color color, int order, bool withShadow = false)
-            => CreateShape(name, Shape.Square, position, scale, color, order, withShadow);
+        public static GameObject Box(string name, Vector2 position, Vector2 scale, Color color, int order)
+            => CreateShape(name, Shape.Square, position, scale, color, order);
 
         public static GameObject CreateTower(string name, Shape shape, Vector2 position, Color color, int order)
         {
-            var tower = CreateShape(name, shape, position, new Vector2(.72f, .72f), color, order, true);
+            var tower = CreateShape(name, shape, position, new Vector2(.72f, .72f), color, order);
             AddFace(tower.transform, order + 1, false);
             return tower;
         }
 
         public static GameObject CreateEnemy(string name, Vector2 position, Color color, int order, bool tough)
         {
-            var enemy = CreateShape(name, Shape.Circle, position, new Vector2(.48f, .48f), color, order, true);
+            var enemy = CreateShape(name, Shape.Circle, position, new Vector2(.48f, .48f), color, order);
             AddFace(enemy.transform, order + 1, tough);
             return enemy;
         }
 
-        public static GameObject CreateShape(string name, Shape shape, Vector2 position, Vector2 scale, Color color, int order, bool withShadow = false)
+        public static GameObject CreateShape(string name, Shape shape, Vector2 position, Vector2 scale, Color color, int order)
         {
             var go = new GameObject(name);
             go.transform.position = position;
@@ -43,7 +42,6 @@ namespace TowerDefenseIncremental
             renderer.sprite = GetSprite(shape);
             renderer.color = color;
             renderer.sortingOrder = order;
-            if (withShadow) go.AddComponent<FlatShadowDuplicator>();
             return go;
         }
 

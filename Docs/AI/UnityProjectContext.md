@@ -63,7 +63,7 @@
 
 ## Coding Conventions
 
-- Namespace style: file-scoped types inside `TowerDefenseIncremental`; rendering helpers use `TowerDefenseIncremental.Rendering`.
+- Namespace style: file-scoped types inside `TowerDefenseIncremental`.
 - Serialized fields: `[SerializeField] private` in authored components; prototype gameplay managers are runtime-configured.
 - Async: no project async framework or asynchronous gameplay code.
 - Comments/docs: concise XML summaries on reusable rendering/bootstrap helpers; gameplay code is lightly documented.
