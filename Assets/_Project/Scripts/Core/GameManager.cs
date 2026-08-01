@@ -50,7 +50,6 @@ namespace TowerDefenseIncremental
             input.StartWavePressed += StartNextWave;
             input.RestartPressed += Restart;
             SetupCamera();
-            path.BuildBoard();
             economy.ResetGold(90);
             Lives = StartingLives;
             pool.Initialize();

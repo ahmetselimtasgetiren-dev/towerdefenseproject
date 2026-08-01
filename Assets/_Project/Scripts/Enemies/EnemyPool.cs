@@ -57,12 +57,8 @@ namespace TowerDefenseIncremental
 
         private Enemy Create(EnemyData data)
         {
-            var enemyObject = SpriteFactory.CreateEnemy(
-                data.DisplayName,
-                Vector2.zero,
-                data.Color,
-                3,
-                data.Tough);
+            var enemyObject = new GameObject(data.DisplayName);
+            enemyObject.transform.position = Vector2.zero;
             enemyObject.transform.SetParent(transform, true);
 
             var enemy = enemyObject.AddComponent<Enemy>();

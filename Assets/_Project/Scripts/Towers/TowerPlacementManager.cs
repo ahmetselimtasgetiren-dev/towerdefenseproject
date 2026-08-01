@@ -97,12 +97,8 @@ namespace TowerDefenseIncremental
                 return;
             }
 
-            var towerObject = SpriteFactory.CreateTower(
-                definition.DisplayName,
-                definition.Shape,
-                point,
-                definition.Color,
-                2);
+            var towerObject = new GameObject(definition.DisplayName);
+            towerObject.transform.position = point;
             var tower = towerObject.AddComponent<Tower>();
             var rangeMultiplier = 1f + progression.GetEffectTotal(SkillEffectType.TargetingRange);
             var cooldownMultiplier = Mathf.Max(

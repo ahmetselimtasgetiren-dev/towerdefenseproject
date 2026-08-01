@@ -12,7 +12,6 @@ namespace TowerDefenseIncremental
             transform.position = origin;
             target = enemy;
             damage = hitDamage;
-            GetComponent<SpriteRenderer>().color = color;
             gameObject.SetActive(true);
         }
 

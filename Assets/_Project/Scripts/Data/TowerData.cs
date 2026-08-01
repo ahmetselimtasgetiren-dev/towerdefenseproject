@@ -8,7 +8,6 @@ namespace TowerDefenseIncremental
         [SerializeField] private string id;
         [SerializeField] private string displayName;
         [SerializeField, Min(0)] private int selectionSlot;
-        [SerializeField] private SpriteFactory.Shape shape;
         [SerializeField] private Color color = Color.white;
         [SerializeField] private Color projectileColor = Color.white;
         [SerializeField, Min(0f)] private float range = 2f;
@@ -19,7 +18,6 @@ namespace TowerDefenseIncremental
         public string Id => id;
         public string DisplayName => displayName;
         public int SelectionSlot => selectionSlot;
-        public SpriteFactory.Shape Shape => shape;
         public Color Color => color;
         public Color ProjectileColor => projectileColor;
         public float Range => range;

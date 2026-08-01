@@ -56,7 +56,7 @@
 | Pattern | Finding | Confidence | Evidence |
 | --- | --- | --- | --- |
 | Composition root | `GameBootstrap` constructs all runtime managers and wires them through `Initialize` methods | Confirmed | `GameBootstrap.cs`, `GameManager.cs` |
-| Runtime-generated presentation | Board sprites and HUD are created at runtime instead of serialized prefabs | Confirmed | `SpriteFactory.cs`, `PathManager.cs`, `RunHud.cs` |
+| Runtime-generated presentation | HUD is created at runtime instead of serialized prefabs | Confirmed | `RunHud.cs` |
 | Event notifications | A small static `GameEvents` class broadcasts economy/run changes | Confirmed | `GameEvents.cs` and consumers |
 | Persistence | JSON meta save stored under `Application.persistentDataPath` | Confirmed | `SaveSystem.cs` |
 | Data authoring | Gameplay values are currently hardcoded; ScriptableObject data layer is absent | Confirmed | tower, wave, enemy, and path scripts |
