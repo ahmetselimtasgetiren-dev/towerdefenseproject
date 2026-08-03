@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ca51a343c58cc544a0191db66739db1, type: 3}
-  m_Name: Targeting
+  m_Name: MultiShot
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefenseIncremental.SkillNodeData
-  id: targeting
-  displayName: Deep Targeting
-  description: Extends tower targeting range by 8% per level.
-  cost: 4
+  id: multi-shot
+  displayName: Multi Shot
+  description: Improves tower firing cadence by 4% per level.
+  cost: 6
   maxLevel: 3
   prerequisites:
-  - {fileID: 11400000, guid: 7e20bd1427eef344782e4aa92973048a, type: 2}
-  effectType: 2
-  effectPerLevel: 0.08
-  icon: {fileID: 21300000, guid: fa1efa58e87dcf64ca2b0471b1fa1a45, type: 3}
-  treePosition: {x: -150, y: 175}
+  - {fileID: 11400000, guid: bdcec87695eb01e45b15761b3b345763, type: 2}
+  effectType: 1
+  effectPerLevel: 0.04
+  icon: {fileID: 21300000, guid: 3384cc53ef1f4cc4c94f5521ef2a0a81, type: 3}
+  treePosition: {x: 130, y: 220}

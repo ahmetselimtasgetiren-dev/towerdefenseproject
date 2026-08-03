@@ -13,12 +13,12 @@ MonoBehaviour:
   m_Name: TowerUnlock
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefenseIncremental.SkillNodeData
   id: tower-unlock
-  displayName: Tower Protocol
-  description: Unlocks the permanent tower command lattice.
+  displayName: Support Grid
+  description: Establishes the aether command lattice and unlocks the upgrade network.
   cost: 3
   maxLevel: 1
   prerequisites: []
   effectType: 0
   effectPerLevel: 1
-  icon: {fileID: 21300000, guid: 6861d28e699e59c4bb1e5a754268d6e2, type: 3}
-  treePosition: {x: -300, y: 0}
+  icon: {fileID: 21300000, guid: 85b643f51d6029d418e63b34d7aec250, type: 3}
+  treePosition: {x: -430, y: 0}

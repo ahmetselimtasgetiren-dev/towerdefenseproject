@@ -10,16 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4ca51a343c58cc544a0191db66739db1, type: 3}
-  m_Name: Targeting
+  m_Name: Aura
   m_EditorClassIdentifier: Assembly-CSharp::TowerDefenseIncremental.SkillNodeData
-  id: targeting
-  displayName: Deep Targeting
-  description: Extends tower targeting range by 8% per level.
-  cost: 4
+  id: aura
+  displayName: Aether Aura
+  description: Reduces tower cooldowns by 4% per level.
+  cost: 9
   maxLevel: 3
   prerequisites:
   - {fileID: 11400000, guid: 7e20bd1427eef344782e4aa92973048a, type: 2}
-  effectType: 2
-  effectPerLevel: 0.08
-  icon: {fileID: 21300000, guid: fa1efa58e87dcf64ca2b0471b1fa1a45, type: 3}
-  treePosition: {x: -150, y: 175}
+  - {fileID: 11400000, guid: 4b290ec81a1d439aa0cbbb5656b1d421, type: 2}
+  effectType: 1
+  effectPerLevel: 0.04
+  icon: {fileID: 21300000, guid: 91e4a2af26593cc4faf66f522aac79c6, type: 3}
+  treePosition: {x: 410, y: -100}
